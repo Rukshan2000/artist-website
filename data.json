@@ -1,5 +1,5 @@
 {
-    "baseUrl": "http://localhost:8002",
+    "baseUrl": "https://spotify-theme-artist-web.vercel.app",
     "artist": {
         "name": "Your Artist Name",
         "title": "Music Artist",
@@ -140,7 +140,7 @@
             "artist": "Your Artist Name",
             "duration": "4:20",
             "cover": "images/unmada.jpg",
-            "audio": "/songs/electric-dreams.mp3",
+            "audio": "/songs/unmada.mp3",
             "progress": 0
         },
         {
