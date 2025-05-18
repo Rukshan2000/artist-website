@@ -1,0 +1,1049 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Artist Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.5/cdn.min.js" defer></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .spotify-green {
+            background-color: #1DB954;
+        }
+        .spotify-green-text {
+            color: #1DB954;
+        }
+        .spotify-black {
+            background-color: #0a0a0a;
+        }
+        .spotify-dark {
+            background-color: #121212;
+        }
+        .spotify-light {
+            background-color: #181818;
+        }
+        .album-card {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .album-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            background-color: #282828;
+        }
+        .progress-bar {
+            height: 5px;
+            background-color: #4D4D4D;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .progress {
+            height: 5px;
+            background-color: #1DB954;
+            border-radius: 10px;
+            position: relative;
+        }
+        .progress:after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -3px;
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .progress-bar:hover .progress:after {
+            opacity: 1;
+        }
+        .player-button {
+            transition: all 0.2s ease;
+        }
+        .player-button:hover {
+            transform: scale(1.15);
+            color: white;
+        }
+        .nav-item {
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover, .nav-item.active {
+            background-color: #282828;
+        }
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        .gradient-overlay {
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+        }
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(29,185,84,0.5) 0%, rgba(10,10,10,1) 100%);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #535353;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1DB954;
+        }
+        /* Responsive fixes */
+        @media (max-width: 768px) {
+        .hero-gradient {
+            height: auto !important;
+            padding-top: 35rem;
+            padding-bottom: 2rem;
+        }
+        
+        .hero-content {
+            margin-top: 2rem;
+        }
+        
+        .hero-profile-image {
+            width: 120px;
+            height: 120px;
+            margin-top: 1rem;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem !important;
+        }
+        
+        /* Existing responsive styles */
+        .player-section {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .player-section > div {
+            width: 100% !important;
+        }
+        .player-controls {
+            order: 2;
+        }
+        .player-info {
+            order: 1;
+        }
+        .player-extra {
+            order: 3;
+            justify-content: center !important;
+        }
+
+        footer .grid {
+        text-align: center;
+    }
+
+    .footer-container {
+        position: relative;
+        width: 100%;
+        margin-top: auto;
+    }
+    
+    .page-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 80px); /* Adjust for player height */
+    }
+     
+}
+    
+    </style>
+</head>
+<body class="spotify-dark min-h-screen">
+    <div x-data="app()" x-init="init()" class="flex flex-col min-h-screen">
+        <!-- Sidebar Navigation -->
+        <div class="flex flex-grow">
+            <nav class="spotify-black w-64 fixed top-0 bottom-0 left-0 p-5 hidden md:block overflow-y-auto">
+                <div class="mb-8 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full spotify-green flex items-center justify-center">
+                        <i class="fas fa-music text-black"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold" x-text="artist.name"></h1>
+                        <p class="text-xs text-gray-400" x-text="artist.title"></p>
+                    </div>
+                </div>
+                
+                <ul class="space-y-2">
+                    <li>
+                        <a @click="activeTab = 'home'" 
+                           :class="{'bg-green-900 bg-opacity-30 text-white': activeTab === 'home', 'text-gray-400': activeTab !== 'home'}" 
+                           class="flex items-center gap-3 font-medium hover:text-white cursor-pointer p-3 nav-item">
+                            <i class="fas fa-home text-xl w-6"></i> Home
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="activeTab = 'songs'" 
+                           :class="{'bg-green-900 bg-opacity-30 text-white': activeTab === 'songs', 'text-gray-400': activeTab !== 'songs'}" 
+                           class="flex items-center gap-3 font-medium hover:text-white cursor-pointer p-3 nav-item">
+                            <i class="fas fa-music text-xl w-6"></i> Songs
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="activeTab = 'playlists'" 
+                           :class="{'bg-green-900 bg-opacity-30 text-white': activeTab === 'playlists', 'text-gray-400': activeTab !== 'playlists'}" 
+                           class="flex items-center gap-3 font-medium hover:text-white cursor-pointer p-3 nav-item">
+                            <i class="fas fa-list text-xl w-6"></i> Playlists
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="activeTab = 'about'" 
+                           :class="{'bg-green-900 bg-opacity-30 text-white': activeTab === 'about', 'text-gray-400': activeTab !== 'about'}" 
+                           class="flex items-center gap-3 font-medium hover:text-white cursor-pointer p-3 nav-item">
+                            <i class="fas fa-user text-xl w-6"></i> About
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="activeTab = 'contact'" 
+                           :class="{'bg-green-900 bg-opacity-30 text-white': activeTab === 'contact', 'text-gray-400': activeTab !== 'contact'}" 
+                           class="flex items-center gap-3 font-medium hover:text-white cursor-pointer p-3 nav-item">
+                            <i class="fas fa-envelope text-xl w-6"></i> Contact
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-12 pt-6 border-t border-gray-800">
+                    <h3 class="text-gray-400 uppercase text-xs font-bold mb-4">Connect</h3>
+                    <div class="flex gap-4">
+                        <a :href="artist.social.instagram" class="text-gray-400 hover:text-white hover:scale-110 transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a :href="artist.social.twitter" class="text-gray-400 hover:text-white hover:scale-110 transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a :href="artist.social.youtube" class="text-gray-400 hover:text-white hover:scale-110 transition">
+                            <i class="fab fa-youtube text-xl"></i>
+                        </a>
+                        <a :href="artist.social.whatsapp" class="text-gray-400 hover:text-white hover:scale-110 transition">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </a>
+                        <a :href="artist.social.spotify" class="text-gray-400 hover:text-white hover:scale-110 transition">
+                            <i class="fab fa-spotify text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Mobile Navigation -->
+            <div class="md:hidden spotify-black w-full fixed top-0 left-0 z-50 p-4 flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full spotify-green flex items-center justify-center">
+                        <i class="fas fa-music text-black text-sm"></i>
+                    </div>
+                    <h1 class="text-lg font-bold" x-text="artist.name"></h1>
+                </div>
+                <button @click="isMenuOpen = !isMenuOpen" class="text-white p-2 hover:bg-gray-800 rounded-full">
+                    <i x-show="!isMenuOpen" class="fas fa-bars text-xl"></i>
+                    <i x-show="isMenuOpen" class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+<!-- Update the mobile navigation drawer -->
+<div x-show="isMenuOpen" 
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0 transform -translate-x-full"
+     x-transition:enter-end="opacity-100 transform translate-x-0"
+     x-transition:leave="transition ease-in duration-300"
+     x-transition:leave-start="opacity-100 transform translate-x-0"
+     x-transition:leave-end="opacity-0 transform -translate-x-full"
+     @click.away="isMenuOpen = false" 
+     class="md:hidden fixed top-0 left-0 w-3/4 h-full spotify-black z-40 shadow-xl flex flex-col pt-20 pb-8 px-5 overflow-y-auto">
+    
+    <!-- Profile section for mobile drawer -->
+    <div class="flex items-center gap-3 mb-6 px-2">
+        <div class="w-12 h-12 rounded-full overflow-hidden">
+            <img :src="artist.image" :alt="artist.name" class="w-full h-full object-cover">
+        </div>
+        <div>
+            <h2 class="font-bold" x-text="artist.name"></h2>
+            <p class="text-xs text-gray-400" x-text="artist.title"></p>
+        </div>
+    </div>
+    
+    <!-- Navigation links -->
+    <ul class="space-y-3 mb-auto">
+        <li>
+            <a @click="activeTab = 'home'; isMenuOpen = false" 
+               :class="{'text-green-500': activeTab === 'home'}"
+               class="flex items-center gap-3 font-medium text-gray-300 hover:text-white p-2">
+                <i class="fas fa-home text-xl w-8"></i> Home
+            </a>
+        </li>
+        <li>
+            <a @click="activeTab = 'songs'; isMenuOpen = false" 
+               :class="{'text-green-500': activeTab === 'songs'}"
+               class="flex items-center gap-3 font-medium text-gray-300 hover:text-white p-2">
+                <i class="fas fa-music text-xl w-8"></i> Songs
+            </a>
+        </li>
+        <li>
+            <a @click="activeTab = 'playlists'; isMenuOpen = false" 
+               :class="{'text-green-500': activeTab === 'playlists'}"
+               class="flex items-center gap-3 font-medium text-gray-300 hover:text-white p-2">
+                <i class="fas fa-list text-xl w-8"></i> Playlists
+            </a>
+        </li>
+        <li>
+            <a @click="activeTab = 'about'; isMenuOpen = false" 
+               :class="{'text-green-500': activeTab === 'about'}"
+               class="flex items-center gap-3 font-medium text-gray-300 hover:text-white p-2">
+                <i class="fas fa-user text-xl w-8"></i> About
+            </a>
+        </li>
+        <li>
+            <a @click="activeTab = 'contact'; isMenuOpen = false" 
+               :class="{'text-green-500': activeTab === 'contact'}"
+               class="flex items-center gap-3 font-medium text-gray-300 hover:text-white p-2">
+                <i class="fas fa-envelope text-xl w-8"></i> Contact
+            </a>
+        </li>
+    </ul>
+    
+    <!-- Social media links -->
+    <div class="mt-6 pt-6 border-t border-gray-800">
+        <h3 class="text-gray-400 uppercase text-xs font-bold mb-4">Connect</h3>
+        <div class="flex gap-5 justify-around">
+            <a :href="artist.social.instagram" class="text-gray-400 hover:text-white">
+                <i class="fab fa-instagram text-2xl"></i>
+            </a>
+            <a :href="artist.social.twitter" class="text-gray-400 hover:text-white">
+                <i class="fab fa-twitter text-2xl"></i>
+            </a>
+            <a :href="artist.social.youtube" class="text-gray-400 hover:text-white">
+                <i class="fab fa-youtube text-2xl"></i>
+            </a>
+            <a :href="artist.social.whatsapp" class="text-gray-400 hover:text-white">
+                <i class="fab fa-whatsapp text-2xl"></i>
+            </a>
+            <a :href="artist.social.spotify" class="text-gray-400 hover:text-white">
+                <i class="fab fa-spotify text-2xl"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Version info at bottom -->
+    <div class="text-center mt-8 text-xs text-gray-500">
+        <p>Version 1.0.0</p>
+        <p class="mt-1">© <span x-text="new Date().getFullYear()"></span></p>
+    </div>
+</div>
+
+<!-- Also update the mobile header to ensure it's visible above the drawer -->
+<div class="md:hidden spotify-black w-full fixed top-0 left-0 z-50 p-4 flex justify-between items-center shadow-lg">
+    <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full spotify-green flex items-center justify-center">
+            <i class="fas fa-music text-black text-sm"></i>
+        </div>
+        <h1 class="text-lg font-bold" x-text="artist.name"></h1>
+    </div>
+    <button @click="isMenuOpen = !isMenuOpen" class="text-white p-2 hover:bg-gray-800 rounded-full z-50">
+        <i x-show="!isMenuOpen" class="fas fa-bars text-xl"></i>
+        <i x-show="isMenuOpen" class="fas fa-times text-xl"></i>
+    </button>
+</div>
+            
+            <!-- Main Content -->
+            <main class="md:ml-64 w-full min-h-screen pb-28 md:pb-32 pt-16 md:pt-0 overflow-x-hidden page-wrapper">
+                <!-- Home Tab -->
+                <div x-show="activeTab === 'home'" class="animate-fadeIn">
+                    <!-- Hero Section -->
+                    <div class="hero-gradient h-96 w-full relative overflow-hidden">
+                        <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-12">
+                            <div class="flex flex-col md:flex-row gap-6 items-center md:items-end">
+                                <img :src="artist.image" :alt="artist.name" class="rounded-full w-48 h-48 object-cover border-4 border-white shadow-2xl">
+                                <div class="text-center md:text-left">
+                                    <span class="text-sm font-medium px-3 py-1 bg-black bg-opacity-50 rounded-full">VERIFIED ARTIST</span>
+                                    <h1 class="text-5xl md:text-7xl font-bold mb-2 mt-3 drop-shadow-lg" x-text="artist.name"></h1>
+                                    <p class="text-gray-200 mb-4 max-w-2xl" x-text="artist.bio"></p>
+                                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                                        <button @click="playFirstSong()" class="spotify-green text-black px-8 py-3 rounded-full font-bold hover:opacity-90 flex items-center gap-2 shadow-lg">
+                                            <i class="fas fa-play"></i> Play Latest
+                                        </button>
+                                        <button class="bg-transparent border-2 border-white px-8 py-3 rounded-full font-bold hover:bg-white hover:bg-opacity-10 shadow-lg flex items-center gap-2">
+                                            <i class="fas fa-user-plus"></i> Follow
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 md:p-10">
+                        <!-- Popular Tracks Section -->
+                        <div class="mb-12">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl md:text-3xl font-bold">Popular Tracks</h2>
+                                <a class="text-sm text-gray-400 hover:text-white cursor-pointer hover:underline">See All</a>
+                            </div>
+                            <div class="bg-black bg-opacity-25 rounded-xl p-4">
+                                <template x-for="(song, index) in songs.slice(0, 5)" :key="song.id">
+                                    <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg group transition">
+                                        <div class="flex items-center gap-4">
+                                            <span class="w-6 text-center text-gray-400 group-hover:hidden" x-text="index + 1"></span>
+                                            <button @click="togglePlay(song)" class="w-6 h-6 text-center hidden group-hover:flex items-center justify-center">
+                                                <i :class="song.isPlaying ? 'fas fa-pause' : 'fas fa-play'" class="text-white"></i>
+                                            </button>
+                                            <div class="relative w-12 h-12">
+                                                <img :src="song.cover" alt="Song Cover" class="w-12 h-12 object-cover rounded shadow">
+                                            </div>
+                                            <div>
+                                                <h3 class="font-medium" x-text="song.title"></h3>
+                                                <p class="text-sm text-gray-400" x-text="song.artist"></p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-6">
+                                            <button class="text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                            <span class="text-sm text-gray-400" x-text="song.duration"></span>
+                                            <button class="text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition">
+                                                <i class="fas fa-ellipsis-h"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Latest Releases Section -->
+                        <div class="mb-12">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl md:text-3xl font-bold">Latest Releases</h2>
+                                <a class="text-sm text-gray-400 hover:text-white cursor-pointer hover:underline">See All</a>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                                <template x-for="song in songs" :key="song.id">
+                                    <div class="album-card spotify-light p-4">
+                                        <div class="relative mb-4 overflow-hidden rounded-lg">
+                                            <img :src="song.cover" alt="Album Cover" class="w-full aspect-square object-cover transition-transform duration-700 hover:scale-110">
+                                            <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                            <button @click="togglePlay(song)" class="absolute bottom-3 right-3 w-12 h-12 spotify-green rounded-full flex items-center justify-center opacity-0 hover:opacity-100 focus:opacity-100 transition-all shadow-xl transform translate-y-2 hover:translate-y-0">
+                                                <i :class="song.isPlaying ? 'fas fa-pause' : 'fas fa-play'" class="text-black"></i>
+                                            </button>
+                                        </div>
+                                        <h3 class="font-medium truncate" x-text="song.title"></h3>
+                                        <p class="text-sm text-gray-400 truncate" x-text="song.artist"></p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Featured Playlists Section -->
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl md:text-3xl font-bold">Featured Playlists</h2>
+                                <a class="text-sm text-gray-400 hover:text-white cursor-pointer hover:underline">See All</a>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                <template x-for="playlist in playlists" :key="playlist.id">
+                                    <div class="album-card spotify-light p-4 group">
+                                        <div class="relative mb-4 overflow-hidden rounded-lg">
+                                            <img :src="playlist.cover" alt="Playlist Cover" class="w-full aspect-square object-cover transition-transform duration-700 hover:scale-110">
+                                            <div class="absolute inset-0 bg-black bg-opacity-25 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                            <button class="absolute bottom-3 right-3 w-12 h-12 spotify-green rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all shadow-xl transform translate-y-2 group-hover:translate-y-0">
+                                                <i class="fas fa-play text-black"></i>
+                                            </button>
+                                        </div>
+                                        <h3 class="font-medium truncate" x-text="playlist.title"></h3>
+                                        <p class="text-sm text-gray-400"><span x-text="playlist.tracks"></span> tracks</p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Songs Tab -->
+                <div x-show="activeTab === 'songs'" class="p-6 md:p-10 animate-fadeIn">
+                    <div class="flex items-center justify-between mb-6">
+                        <h1 class="text-3xl md:text-4xl font-bold">All Songs</h1>
+                        <div class="relative">
+                            <input type="text" placeholder="Search songs..." class="bg-gray-800 rounded-full py-2 px-4 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-black bg-opacity-25 rounded-xl p-4">
+                        <div class="flex items-center justify-between p-3 text-gray-400 border-b border-gray-800">
+                            <div class="flex items-center gap-4">
+                                <span class="w-8 text-center">#</span>
+                                <span>Title</span>
+                            </div>
+                            <div class="flex items-center gap-8">
+                                <span class="hidden md:block">Album</span>
+                                <span>Duration</span>
+                            </div>
+                        </div>
+                        
+                        <template x-for="(song, index) in songs" :key="song.id">
+                            <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-md group">
+                                <div class="flex items-center gap-4">
+                                    <span class="w-8 text-center text-gray-400 group-hover:hidden" x-text="index + 1"></span>
+                                    <button @click="togglePlay(song)" class="w-8 h-8 hidden group-hover:flex items-center justify-center">
+                                        <i :class="song.isPlaying ? 'fas fa-pause' : 'fas fa-play'" class="text-white"></i>
+                                    </button>
+                                    <div class="relative w-12 h-12">
+                                        <img :src="song.cover" alt="Song Cover" class="w-12 h-12 object-cover rounded shadow-md">
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium" x-text="song.title"></h3>
+                                        <p class="text-sm text-gray-400" x-text="song.artist"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-8">
+                                    <span class="text-sm text-gray-400 hidden md:block">Album Name</span>
+                                    <div class="flex items-center gap-4">
+                                        <button class="text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition">
+                                            <i class="far fa-heart"></i>
+                                        </button>
+                                        <span class="text-sm text-gray-400" x-text="song.duration"></span>
+                                        <button class="text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Playlists Tab -->
+                <div x-show="activeTab === 'playlists'" class="p-6 md:p-10 animate-fadeIn">
+                    <div class="flex items-center justify-between mb-8">
+                        <h1 class="text-3xl md:text-4xl font-bold">Your Playlists</h1>
+         
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <template x-for="playlist in playlists" :key="playlist.id">
+                            <div class="card-hover-effect spotify-light rounded-xl overflow-hidden">
+                                <div class="flex p-4">
+                                    <img :src="playlist.cover" alt="Playlist Cover" class="w-24 h-24 object-cover rounded-lg shadow-lg">
+                                    <div class="ml-4 flex flex-col justify-between py-1">
+                                        <div>
+                                            <h3 class="font-semibold text-lg" x-text="playlist.title"></h3>
+                                            <p class="text-sm text-gray-400"><span x-text="playlist.tracks"></span> tracks</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <button class="text-sm spotify-green-text hover:underline flex items-center gap-1">
+                                                <i class="fas fa-play text-xs"></i> Play
+                                            </button>
+                                            <button class="text-sm text-gray-400 hover:text-white hover:underline">
+                                                <i class="fas fa-share-alt text-xs"></i> Share
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-900 bg-opacity-50 py-3 px-4 flex justify-between items-center">
+                                    <span class="text-xs text-gray-400">Created on May 15, 2025</span>
+                                    <button class="text-gray-400 hover:text-white">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- About Tab -->
+                <div x-show="activeTab === 'about'" class="animate-fadeIn">
+                    <div class="h-64 bg-gradient-to-b from-gray-800 to-spotify-dark relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-end">
+                            <div class="p-8">
+                                <h1 class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">About the Artist</h1>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 md:p-10">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/3">
+                                <img :src="artist.image.replace('300', '400x600')" :alt="artist.name" class="w-full object-cover rounded-xl shadow-xl">
+                                
+                                <div class="mt-6 spotify-light p-6 rounded-xl">
+                                    <h3 class="font-bold text-lg mb-4">Artist Details</h3>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <p class="text-sm text-gray-400">Full Name</p>
+                                            <p x-text="artist.fullName" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Born</p>
+                                            <p x-text="artist.birthDate" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Genres</p>
+                                            <p x-text="artist.genres.join(', ')" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Label</p>
+                                            <p x-text="artist.label" class="font-medium"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 spotify-light p-6 rounded-xl">
+                                    <h3 class="font-bold text-lg mb-4">Stats</h3>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-sm text-gray-400">Monthly Listeners</p>
+                                            <p x-text="artist.stats.listeners" class="text-2xl font-bold"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Followers</p>
+                                            <p x-text="artist.stats.followers" class="text-2xl font-bold"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Total Streams</p>
+                                            <p x-text="artist.stats.streams" class="text-2xl font-bold"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="md:w-2/3">
+                                <div class="spotify-light p-6 rounded-xl mb-6">
+                                    <h2 class="text-2xl font-bold mb-4">Biography</h2>
+                                    <div class="prose prose-invert max-w-none">
+                                        <p x-text="artist.bioLong" class="mb-4"></p>
+                                        <p class="mb-4">Born and raised in <span x-text="artist.hometown"></span>, <span x-text="artist.name"></span> began their musical journey at an early age. Their unique sound blends elements of <span x-text="artist.genres[0]"></span> with <span x-text="artist.genres[1]"></span>, creating a signature style that has captivated audiences worldwide.</p>
+                                        <p class="mb-4">After releasing their debut single in <span x-text="artist.careerStart"></span>, they quickly gained recognition for their innovative approach to music production and heartfelt lyrics. Their breakthrough came with the release of <span x-text="artist.breakthroughAlbum"></span>, which topped charts in multiple countries.</p>
+                                        <p>Today, <span x-text="artist.name"></span> continues to push creative boundaries while collaborating with some of the biggest names in the industry. Their live performances are known for their high energy and emotional depth, creating unforgettable experiences for fans.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="spotify-light p-6 rounded-xl">
+                                    <h2 class="text-2xl font-bold mb-4">Discography</h2>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full">
+                                            <thead class="border-b border-gray-700">
+                                                <tr>
+                                                    <th class="text-left py-3 px-4 text-gray-400 font-medium">Year</th>
+                                                    <th class="text-left py-3 px-4 text-gray-400 font-medium">Album</th>
+                                                    <th class="text-left py-3 px-4 text-gray-400 font-medium">Type</th>
+                                                    <th class="text-right py-3 px-4 text-gray-400 font-medium">Certifications</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template x-for="album in artist.discography">
+                                                    <tr class="border-b border-gray-800 hover:bg-gray-800">
+                                                        <td class="py-3 px-4" x-text="album.year"></td>
+                                                        <td class="py-3 px-4 font-medium" x-text="album.title"></td>
+                                                        <td class="py-3 px-4 text-gray-400" x-text="album.type"></td>
+                                                        <td class="py-3 px-4 text-right" x-text="album.certification"></td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <div class="spotify-light p-6 rounded-xl mt-6">
+                                    <h2 class="text-2xl font-bold mb-4">Awards & Nominations</h2>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <template x-for="award in artist.awards">
+                                            <div class="flex items-start gap-4 p-3 hover:bg-gray-800 rounded-lg">
+                                                <div class="w-12 h-12 flex-shrink-0 bg-yellow-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-trophy text-yellow-500"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-medium" x-text="award.name"></h3>
+                                                    <p class="text-sm text-gray-400" x-text="award.year"></p>
+                                                    <p class="text-sm mt-1" x-text="award.category"></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Tab -->
+                <!-- Contact Tab - Fixed Responsive Issues -->
+<div x-show="activeTab === 'contact'" class="animate-fadeIn">
+    <div class="h-64 bg-gradient-to-b from-gray-800 to-spotify-dark relative overflow-hidden">
+        <div class="absolute inset-0 flex items-end">
+            <div class="p-8">
+                <h1 class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">Get In Touch</h1>
+                <p class="text-gray-300 max-w-2xl">Contact for bookings, collaborations, or just to say hello!</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="p-6 md:p-10">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Contact Info - Now responsive -->
+            <div class="w-full md:w-1/3 order-2 md:order-1">
+                <div class="spotify-light p-6 rounded-xl md:sticky md:top-6">
+                    <h3 class="font-bold text-lg mb-4">Contact Information</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-envelope text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">Email</p>
+                                <a :href="'mailto:' + artist.contact.email" class="font-medium hover:underline" x-text="artist.contact.email"></a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-phone-alt text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">Phone</p>
+                                <a :href="'tel:' + artist.contact.phone" class="font-medium hover:underline" x-text="artist.contact.phone"></a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-map-marker-alt text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">Location</p>
+                                <p class="font-medium" x-text="artist.contact.location"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h3 class="font-bold text-lg mb-4">Booking</h3>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-calendar-alt text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">Booking Agent</p>
+                                <p class="font-medium" x-text="artist.contact.bookingAgent"></p>
+                                <a :href="'mailto:' + artist.contact.bookingEmail" class="text-sm hover:underline" x-text="artist.contact.bookingEmail"></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h3 class="font-bold text-lg mb-4">Follow</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <template x-for="(value, key) in artist.social">
+                                <a :href="value" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
+                                    <i :class="'fab fa-' + key + ' text-lg'"></i>
+                                </a>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Form and FAQs - Now responsive -->
+            <div class="w-full md:w-2/3 order-1 md:order-2">
+                <div class="spotify-light p-6 rounded-xl">
+                    <h2 class="text-2xl font-bold mb-6">Send a Message</h2>
+                    <form class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Name</label>
+                                <input type="text" class="w-full bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Email</label>
+                                <input type="email" class="w-full bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Subject</label>
+                            <input type="text" class="w-full bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Message</label>
+                            <textarea rows="5" class="w-full bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                        </div>
+                        <button type="submit" class="spotify-green text-black px-6 py-3 rounded-lg font-bold hover:opacity-90 transition">Send Message</button>
+                    </form>
+                </div>
+                
+                <div class="spotify-light p-6 rounded-xl mt-6">
+                    <h2 class="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <div class="space-y-4">
+                        <template x-for="(faq, index) in artist.faqs">
+                            <div x-data="{ open: index === 0 }" class="border-b border-gray-800 pb-4">
+                                <button @click="open = !open" class="flex justify-between items-center w-full text-left">
+                                    <h3 class="font-medium" x-text="faq.question"></h3>
+                                    <i :class="open ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="text-gray-400 transition-transform"></i>
+                                </button>
+                                <div x-show="open" x-collapse class="mt-2 text-gray-300 text-sm">
+                                    <p x-text="faq.answer"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer-container">
+    <footer class="spotify-black p-6 md:p-10 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full spotify-green flex items-center justify-center">
+                        <i class="fas fa-music text-black"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold" x-text="artist.name"></h1>
+                        <p class="text-xs text-gray-400" x-text="artist.title"></p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-400 mt-4 max-w-md">Creating unique and inspiring music that connects people worldwide.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-12 gap-y-6 text-center md:text-left">
+                <div>
+                    <h3 class="font-medium mb-2">Links</h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a @click="activeTab = 'home'" class="hover:text-white cursor-pointer">Home</a></li>
+                        <li><a @click="activeTab = 'songs'" class="hover:text-white cursor-pointer">Songs</a></li>
+                        <li><a @click="activeTab = 'playlists'" class="hover:text-white cursor-pointer">Playlists</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-medium mb-2">Follow</h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a :href="artist.social.instagram" class="hover:text-white">Instagram</a></li>
+                        <li><a :href="artist.social.twitter" class="hover:text-white">Twitter</a></li>
+                        <li><a :href="artist.social.youtube" class="hover:text-white">YouTube</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-medium mb-2">Legal</h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 pt-6 border-t border-gray-800 text-center text-sm text-gray-400">
+            <p>© <span x-text="new Date().getFullYear()"></span> <span x-text="artist.name"></span>. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+</main>
+        </div>
+        
+        <!-- Player Bar -->
+        <div class="fixed bottom-0 left-0 right-0 spotify-black border-t border-gray-800 z-50 transition-transform duration-300" 
+             :class="isPlayerVisible ? 'translate-y-0' : 'translate-y-full'" 
+             style="transform-origin: bottom">
+            <div class="absolute -top-10 right-6">
+                <button @click="togglePlayer" class="bg-gray-900 hover:bg-gray-800 text-white p-2 rounded-t-lg shadow-lg transition-all">
+                    <i :class="isPlayerVisible ? 'fas fa-chevron-down' : 'fas fa-chevron-up'" class="text-sm"></i>
+                    <span class="ml-2 text-xs" x-text="isPlayerVisible ? 'Hide Player' : 'Show Player'"></span>
+                </button>
+            </div>
+            
+            <div class="progress-bar w-full" @click="updateProgress($event)">
+                <div class="progress" :style="'width: ' + progress + '%'"></div>
+            </div>
+            
+            <div class="player-section flex items-center justify-between p-4">
+                <div class="player-info flex items-center gap-3 w-1/4">
+                    <img :src="currentSong.cover" alt="Now Playing" class="w-14 h-14 object-cover rounded" x-show="currentSong">
+                    <div x-show="currentSong">
+                        <h4 class="font-medium text-sm" x-text="currentSong.title"></h4>
+                        <p class="text-xs text-gray-400" x-text="currentSong.artist"></p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white" x-show="currentSong">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+                
+                <div class="player-controls flex flex-col items-center w-2/4">
+                    <div class="flex items-center gap-4 mb-2">
+                        <button class="text-gray-400 hover:text-white player-button">
+                            <i class="fas fa-random"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-white player-button">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button @click="togglePlay(currentSong)" class="w-10 h-10 rounded-full spotify-green flex items-center justify-center text-black player-button">
+                            <i :class="isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-white player-button">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-white player-button">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div class="w-full flex items-center gap-2 text-xs text-gray-400">
+                        <span x-text="currentTime"></span>
+                        <div class="flex-grow h-1 bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-gray-400 hover:bg-green-500" :style="'width: ' + progress + '%'"></div>
+                        </div>
+                        <span x-text="currentSong.duration"></span>
+                    </div>
+                </div>
+                
+                <div class="player-extra flex items-center justify-end gap-3 w-1/4">
+                    <button class="text-gray-400 hover:text-white player-button">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white player-button">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white player-button">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="w-24 h-1 bg-gray-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-gray-400 hover:bg-green-500" style="width: 80%"></div>
+                    </div>
+                    <button class="text-gray-400 hover:text-white player-button">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function app() {
+            return {
+                isMenuOpen: false,
+                activeTab: 'home',
+                isPlaying: false,
+                currentSong: null,
+                progress: 0,
+                currentTime: '0:00',
+                artist: {},
+                songs: [],
+                playlists: [],
+                audio: null,
+                isPlayerVisible: true,
+                baseUrl: '',
+    
+                init() {
+                    this.audio = new Audio();
+                    this.audio.addEventListener('timeupdate', this.updateTime.bind(this));
+                    this.audio.addEventListener('ended', this.songEnded.bind(this));
+    
+                    // Load data from external JSON file
+                    fetch('data.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.baseUrl = data.baseUrl || '';
+                            this.artist = data.artist;
+                            this.playlists = data.playlists;
+    
+                            // Map songs and prepend baseUrl to each audio file path
+                            this.songs = data.songs.map(song => ({
+                                ...song,
+                                audio: this.baseUrl + song.audio,
+                                isPlaying: false
+                            }));
+                        })
+                        .catch(error => {
+                            console.error('Error loading data:', error);
+                        });
+                },
+    
+                togglePlay(song) {
+                    if (!song) return;
+    
+                    if (this.currentSong && this.currentSong.id === song.id) {
+                        if (this.isPlaying) {
+                            this.audio.pause();
+                            this.isPlaying = false;
+                            song.isPlaying = false;
+                        } else {
+                            this.audio.play();
+                            this.isPlaying = true;
+                            song.isPlaying = true;
+                        }
+                    } else {
+                        if (this.currentSong) {
+                            this.currentSong.isPlaying = false;
+                        }
+    
+                        this.currentSong = song;
+                        this.audio.src = song.audio;
+                        this.audio.play();
+                        this.isPlaying = true;
+                        song.isPlaying = true;
+                    }
+                },
+    
+                playFirstSong() {
+                    if (this.songs.length > 0) {
+                        this.togglePlay(this.songs[0]);
+                    }
+                },
+    
+                updateTime() {
+                    if (this.audio.duration) {
+                        this.progress = (this.audio.currentTime / this.audio.duration) * 100;
+    
+                        const minutes = Math.floor(this.audio.currentTime / 60);
+                        const seconds = Math.floor(this.audio.currentTime % 60);
+                        this.currentTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                    }
+                },
+    
+                updateProgress(e) {
+                    if (!this.audio.duration) return;
+    
+                    const progressBar = e.currentTarget;
+                    const clickPosition = e.clientX - progressBar.getBoundingClientRect().left;
+                    const progressBarWidth = progressBar.clientWidth;
+                    const percentageClicked = (clickPosition / progressBarWidth) * 100;
+    
+                    this.progress = percentageClicked;
+                    this.audio.currentTime = (percentageClicked / 100) * this.audio.duration;
+                },
+    
+                songEnded() {
+                    this.isPlaying = false;
+                    if (this.currentSong) {
+                        this.currentSong.isPlaying = false;
+                    }
+                    this.progress = 0;
+                    this.currentTime = '0:00';
+                },
+    
+                togglePlayer() {
+                    this.isPlayerVisible = !this.isPlayerVisible;
+                }
+            }
+        }
+    </script>
+    
+</body>
+</html>

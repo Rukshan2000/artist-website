@@ -1,0 +1,195 @@
+{
+    "baseUrl": "http://localhost:8002",
+    "artist": {
+        "name": "Your Artist Name",
+        "title": "Music Artist",
+        "bio": "Creating unique sounds since 2020",
+        "image": "images/profilee.webp",
+        "fullName": "John Alexander Smith",
+        "birthDate": "June 15, 1992",
+        "genres": [
+            "Electronic Pop",
+            "Indie",
+            "Alternative R&B"
+        ],
+        "label": "Universal Music Group",
+        "hometown": "Los Angeles",
+        "careerStart": "2020",
+        "breakthroughAlbum": "Midnight Echoes",
+        "bioLong": "Your Artist Name has been redefining the boundaries of modern music since bursting onto the scene in 2020. With a unique approach that blends electronic production with soulful vocals and thoughtful lyrics, they've quickly established themselves as one of the most innovative voices in contemporary music.",
+        "about": {
+            "description": [
+                "Your Artist Name is a genre-defying musician known for blending electronic, pop, and indie influences into a unique sound that has captivated audiences worldwide.",
+                "Since breaking onto the scene in 2020, Your Artist Name has released multiple chart-topping singles and collaborated with some of the industry's biggest names. Their music explores themes of love, identity, and the human experience in the digital age.",
+                "With a distinctive vocal style and innovative production techniques, Your Artist Name continues to push the boundaries of contemporary music while maintaining an authentic connection with fans across the globe."
+            ],
+            "achievements": [
+                "5 Platinum Singles",
+                "2 Grammy Nominations",
+                "Over 10 Million Monthly Listeners",
+                "Sold-out World Tour (2023)",
+                "Featured on Billboard Hot 100"
+            ]
+        },
+        "stats": {
+            "listeners": "12.5 Million",
+            "followers": "8.3 Million",
+            "streams": "1.2 Billion"
+        },
+        "contact": {
+            "email": "contact@yourartistname.com",
+            "phone": "+1 (234) 567-890",
+            "instagram": "@yourartistname",
+            "twitter": "@yourartistname",
+            "bookingAgent": "Maria Johnson",
+            "bookingEmail": "bookings@musicmanagement.com",
+            "location": "Los Angeles, CA",
+            "management": {
+                "name": "Music Management Inc.",
+                "email": "bookings@yourartistname.com",
+                "phone": "+1 (987) 654-321"
+            }
+        },
+        "social": {
+            "instagram": "#",
+            "twitter": "#",
+            "youtube": "#",
+            "whatsapp": "https://wa.me/+94779054385",
+            "spotify": "#"
+        },
+        "discography": [
+            {
+                "year": "2023",
+                "title": "Digital Dreams",
+                "type": "Studio Album",
+                "certification": "2× Platinum"
+            },
+            {
+                "year": "2022",
+                "title": "Midnight Echoes",
+                "type": "Studio Album",
+                "certification": "Platinum"
+            },
+            {
+                "year": "2021",
+                "title": "First Light",
+                "type": "EP",
+                "certification": "Gold"
+            },
+            {
+                "year": "2020",
+                "title": "New Beginnings",
+                "type": "Single",
+                "certification": "Platinum"
+            }
+        ],
+        "awards": [
+            {
+                "name": "Grammy Awards",
+                "year": "2023",
+                "category": "Best New Artist"
+            },
+            {
+                "name": "MTV Music Awards",
+                "year": "2022",
+                "category": "Best Electronic Performance"
+            },
+            {
+                "name": "Billboard Music Awards",
+                "year": "2022",
+                "category": "Top Streaming Artist"
+            },
+            {
+                "name": "American Music Awards",
+                "year": "2021",
+                "category": "Breakthrough Artist of the Year"
+            }
+        ],
+        "faqs": [
+            {
+                "question": "Are you currently touring?",
+                "answer": "Yes! I'm currently on my 'Digital Dreams' world tour. Check the tour section for dates and tickets."
+            },
+            {
+                "question": "How can I book you for a private event?",
+                "answer": "For private bookings and events, please contact my booking agent through the email listed in the contact section."
+            },
+            {
+                "question": "Do you offer music production services?",
+                "answer": "Yes, I collaborate with select artists on production. Submit your inquiry through the contact form."
+            },
+            {
+                "question": "When is your next album release?",
+                "answer": "I'm currently working on new music scheduled for release early next year. Follow me on social media for updates!"
+            }
+        ]
+    },
+    "songs": [
+        {
+            "id": 1,
+            "title": "Mang Dakka Heene",
+            "artist": "Your Artist Name",
+            "duration": "3:45",
+            "cover": "images/mndakkaheene.webp",
+            "audio": "/songs/mang-dakka-heene-sana.mp3",
+            "progress": 30
+        },
+        {
+            "id": 2,
+            "title": "Unmada Prema  Geeya",
+            "artist": "Your Artist Name",
+            "duration": "4:20",
+            "cover": "images/unmada.jpg",
+            "audio": "/songs/electric-dreams.mp3",
+            "progress": 0
+        },
+        {
+            "id": 3,
+            "title": "Mathakada Mawa",
+            "artist": "Your Artist Name",
+            "duration": "3:10",
+            "cover": "images/mathakadaMawa.jpg",
+            "audio": "/songs/mathakadaMawa.mp3",
+            "progress": 0
+        },
+        {
+            "id": 4,
+            "title": "Hitha Mage Parala",
+            "artist": "Your Artist Name",
+            "duration": "2:55",
+            "cover": "images/romesh.jpg",
+            "audio": "/songs/romesh.mp3",
+            "progress": 0
+        },
+  
+        {
+            "id": 5,
+            "title": "Suthraya",
+            "artist": "Your Artist Name",
+            "duration": "3:50",
+            "cover": "images/suthraya.webp",
+            "audio": "/songs/suthraya.mp3",
+            "progress": 0
+        }
+    ],
+    "playlists": [
+        {
+            "id": 1,
+            "title": "Greatest Hits",
+            "tracks": 12,
+            "cover": "images/placehalder.jpg"
+        },
+        {
+            "id": 2,
+            "title": "Acoustic Sessions",
+            "tracks": 8,
+            "cover": "images/placehalder.jpg"
+        },
+        {
+            "id": 3,
+            "title": "Collaborations",
+            "tracks": 10,
+            "cover": "images/placehalder.jpg"
+        }
+    ]
+}
