@@ -591,16 +591,20 @@
 
                 <!-- Gallery Tab -->
                 <div x-show="activeTab === 'gallery'" class="p-6 md:p-10 animate-fadeIn">
-                    <div class="flex items-center justify-between mb-6">
-                        <h1 class="text-3xl md:text-4xl font-bold">Gallery</h1>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        <template x-for="n in [1,2,3,4]" :key="n">
-                            <div class="overflow-hidden rounded-lg">
-                                <img :src="`images/gallerysana${n}.jpg`" alt="Gallery image" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
-                            </div>
-                        </template>
-                    </div>
+                  <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-3xl md:text-4xl font-bold">Gallery</h1>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <template x-for="image in gallery" :key="image.id">
+                      <div class="overflow-hidden rounded-lg">
+                        <img
+                          :src="baseUrl + image.image"
+                          alt="Gallery image"
+                          class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                        >
+                      </div>
+                    </template>
+                  </div>
                 </div>
 
                 <!-- About Tab -->
@@ -980,33 +984,30 @@
                 artist: {},
                 songs: [],
                 playlists: [],
+                gallery: [],              // ← add this
                 audio: null,
                 isPlayerVisible: true,
                 baseUrl: '',
-    
+
                 init() {
                     this.audio = new Audio();
                     this.audio.addEventListener('timeupdate', this.updateTime.bind(this));
                     this.audio.addEventListener('ended', this.songEnded.bind(this));
-    
-                    // Load data from external JSON file
+
                     fetch('data.json')
-                        .then(response => response.json())
-                        .then(data => {
-                            this.baseUrl = data.baseUrl || '';
-                            this.artist = data.artist;
-                            this.playlists = data.playlists;
-    
-                            // Map songs and prepend baseUrl to each audio file path
-                            this.songs = data.songs.map(song => ({
-                                ...song,
-                                audio: this.baseUrl + song.audio,
-                                isPlaying: false
-                            }));
-                        })
-                        .catch(error => {
-                            console.error('Error loading data:', error);
-                        });
+                      .then(r => r.json())
+                      .then(data => {
+                        this.baseUrl    = data.baseUrl || '';
+                        this.artist     = data.artist;
+                        this.playlists  = data.playlists;
+                        this.gallery    = data.gallery;          // ← load gallery
+                        this.songs      = data.songs.map(song => ({
+                          ...song,
+                          audio: this.baseUrl + song.audio,
+                          isPlaying: false
+                        }));
+                      })
+                      .catch(e => console.error('Error loading data:', e));
                 },
     
                 togglePlay(song) {

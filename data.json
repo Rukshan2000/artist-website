@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://spotify-theme-artist-web.vercel.app",
+    "baseUrl": "https://spotify-theme-artist-web.vercel.app/",
     "artist": {
         "name": "SANA",
         "title": "Sri Lankan Music Sensation",
@@ -136,5 +136,6 @@
         { "id": 6, "image": "images/gallery/sana6.jpg" },
         { "id": 7, "image": "images/gallery/sana7.jpg" },
         { "id": 8, "image": "images/gallery/sana8.jpg" },
-        { "id": 9, "image": "images/gallery/sana9.jpg" }    ]
+        { "id": 9, "image": "images/gallery/sana9.jpg" }    
+    ]
 }
