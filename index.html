@@ -111,8 +111,29 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #1DB954;
         }
-        /* Responsive fixes - simplified */
+        /* Responsive fixes */
         @media (max-width: 768px) {
+        .hero-gradient {
+            height: auto !important;
+            padding-top: 35rem;
+            padding-bottom: 2rem;
+        }
+        
+        .hero-content {
+            margin-top: 2rem;
+        }
+        
+        .hero-profile-image {
+            width: 120px;
+            height: 120px;
+            margin-top: 1rem;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem !important;
+        }
+        
+        /* Existing responsive styles */
         .player-section {
             flex-direction: column;
             gap: 1rem;
@@ -130,20 +151,24 @@
             order: 3;
             justify-content: center !important;
         }
+
         footer .grid {
-            text-align: center;
-        }
-        .footer-container {
-            position: relative;
-            width: 100%;
-            margin-top: auto;
-        }
-        .page-wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 80px);
-        }
+        text-align: center;
     }
+
+    .footer-container {
+        position: relative;
+        width: 100%;
+        margin-top: auto;
+    }
+    
+    .page-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 80px); /* Adjust for player height */
+    }
+     
+}
     
     </style>
 </head>
@@ -365,10 +390,10 @@
                 <!-- Home Tab -->
                 <div x-show="activeTab === 'home'" class="animate-fadeIn">
                     <!-- Hero Section -->
-                    <div class="hero-gradient w-full relative overflow-hidden h-auto md:h-96 py-20 md:py-0">
-                        <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-12 hero-content">
+                    <div class="hero-gradient h-96 w-full relative overflow-hidden">
+                        <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-12">
                             <div class="flex flex-col md:flex-row gap-6 items-center md:items-end">
-                                <img :src="artist.image" :alt="artist.name" class="rounded-full w-48 h-48 md:hero-profile-image object-cover border-4 border-white shadow-2xl">
+                                <img :src="artist.image" :alt="artist.name" class="rounded-full w-48 h-48 object-cover border-4 border-white shadow-2xl">
                                 <div class="text-center md:text-left">
                                     <span class="text-sm font-medium px-3 py-1 bg-black bg-opacity-50 rounded-full">VERIFIED ARTIST</span>
                                     <h1 class="text-5xl md:text-7xl font-bold mb-2 mt-3 drop-shadow-lg" x-text="artist.name"></h1>
