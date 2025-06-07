@@ -103,15 +103,14 @@
             "title": "Alawanthakama",
             "tracks": 12,
             "cover": "images/alawanthakama-cover-song-lk_view.webp",
-            "link": "https://www.youtube.com/@sanaligonigoda/playlists" 
+            "link": "https://www.youtube.com/@sanaligonigoda/playlists"
         },
         {
             "id": 2,
             "title": "SANA | Official Music Videos",
             "tracks": 8,
-            "cover": "images/prpfile.png",
-            "link": "https://www.youtube.com/@sanaligonigoda/playlists" 
-
+            "cover": "images/profile.png",
+            "link": "https://www.youtube.com/@sanaligonigoda/playlists"
         },
         {
             "id": 3,
@@ -125,8 +124,17 @@
             "title": "Shot covers by | SANA",
             "tracks": 10,
             "cover": "images/mndakkaheene.webp",
-            "link": "https://www.youtube.com/@sanaligonigoda/playlists" 
-
+            "link": "https://www.youtube.com/@sanaligonigoda/playlists"
         }
-    ]
+    ],
+    "gallery": [
+        { "id": 1, "image": "images/gallery/sana1.jpeg" },
+        { "id": 2, "image": "images/gallery/sana2.jpeg" },
+        { "id": 3, "image": "images/gallery/sana3.jpeg" },
+        { "id": 4, "image": "images/gallery/sana4.jpg" },
+        { "id": 5, "image": "images/gallery/sana5.jpg" },
+        { "id": 6, "image": "images/gallery/sana6.jpg" },
+        { "id": 7, "image": "images/gallery/sana7.jpg" },
+        { "id": 8, "image": "images/gallery/sana8.jpg" },
+        { "id": 9, "image": "images/gallery/sana9.jpg" }    ]
 }

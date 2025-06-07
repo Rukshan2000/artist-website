@@ -210,6 +210,13 @@
                         </a>
                     </li>
                     <li>
+                        <a @click="activeTab = 'gallery'"
+                           :class="{'bg-green-900 bg-opacity-30 text-white': activeTab === 'gallery', 'text-gray-400': activeTab !== 'gallery'}"
+                           class="flex items-center gap-3 font-medium hover:text-white cursor-pointer p-3 nav-item">
+                            <i class="fas fa-images text-xl w-6"></i> Gallery
+                        </a>
+                    </li>
+                    <li>
                         <a @click="activeTab = 'about'" 
                            :class="{'bg-green-900 bg-opacity-30 text-white': activeTab === 'about', 'text-gray-400': activeTab !== 'about'}" 
                            class="flex items-center gap-3 font-medium hover:text-white cursor-pointer p-3 nav-item">
@@ -307,6 +314,13 @@
                :class="{'text-green-500': activeTab === 'playlists'}"
                class="flex items-center gap-3 font-medium text-gray-300 hover:text-white p-2">
                 <i class="fas fa-list text-xl w-8"></i> Playlists
+            </a>
+        </li>
+        <li>
+            <a @click="activeTab = 'gallery'; isMenuOpen = false" 
+               :class="{'text-green-500': activeTab === 'gallery'}"
+               class="flex items-center gap-3 font-medium text-gray-300 hover:text-white p-2">
+                <i class="fas fa-images text-xl w-8"></i> Gallery
             </a>
         </li>
         <li>
@@ -461,11 +475,12 @@
                         <div>
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-2xl md:text-3xl font-bold">Featured Playlists</h2>
+                                
                                 <a class="text-sm text-gray-400 hover:text-white cursor-pointer hover:underline">See All</a>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                 <template x-for="playlist in playlists" :key="playlist.id">
-                                    <div class="album-card spotify-light p-4 group">
+                                    <a :href="playlist.link" target="_blank" class="album-card spotify-light p-4 block">
                                         <div class="relative mb-4 overflow-hidden rounded-lg">
                                             <img :src="playlist.cover" alt="Playlist Cover" class="w-full aspect-square object-cover transition-transform duration-700 hover:scale-110">
                                             <div class="absolute inset-0 bg-black bg-opacity-25 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -475,7 +490,7 @@
                                         </div>
                                         <h3 class="font-medium truncate" x-text="playlist.title"></h3>
                                         <p class="text-sm text-gray-400"><span x-text="playlist.tracks"></span> tracks</p>
-                                    </div>
+                                    </a>
                                 </template>
                             </div>
                         </div>
@@ -545,7 +560,7 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <template x-for="playlist in playlists" :key="playlist.id">
-                            <div class="card-hover-effect spotify-light rounded-xl overflow-hidden">
+                            <a :href="playlist.link" target="_blank" class="card-hover-effect spotify-light rounded-xl overflow-hidden block">
                                 <div class="flex p-4">
                                     <img :src="playlist.cover" alt="Playlist Cover" class="w-24 h-24 object-cover rounded-lg shadow-lg">
                                     <div class="ml-4 flex flex-col justify-between py-1">
@@ -569,6 +584,20 @@
                                         <i class="fas fa-ellipsis-h"></i>
                                     </button>
                                 </div>
+                            </a>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Gallery Tab -->
+                <div x-show="activeTab === 'gallery'" class="p-6 md:p-10 animate-fadeIn">
+                    <div class="flex items-center justify-between mb-6">
+                        <h1 class="text-3xl md:text-4xl font-bold">Gallery</h1>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <template x-for="n in [1,2,3,4]" :key="n">
+                            <div class="overflow-hidden rounded-lg">
+                                <img :src="`images/gallerysana${n}.jpg`" alt="Gallery image" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
                             </div>
                         </template>
                     </div>
