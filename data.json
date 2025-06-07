@@ -80,59 +80,53 @@
         },
         {
             "id": 2,
-            "title": "Unmada Prema  Geeya",
+            "title": "Sandak Wela",
             "artist": "SANA",
             "duration": "4:20",
-            "cover": "images/unmada.jpg",
-            "audio": "/songs/unmada.mp3",
+            "cover": "images/Sandak-Wela-Sana-Cover-www.song.lk_view.webp",
+            "audio": "/songs/Sandak Wela - Sana [SONG.LK].mp3",
             "progress": 0
         },
         {
             "id": 3,
-            "title": "Mathakada Mawa",
+            "title": "Alawanthakama",
             "artist": "SANA",
             "duration": "3:10",
-            "cover": "images/mathakadaMawa.jpg",
-            "audio": "/songs/mathakadaMawa.mp3",
-            "progress": 0
-        },
-        {
-            "id": 4,
-            "title": "Hitha Mage Parala",
-            "artist": "SANA",
-            "duration": "2:55",
-            "cover": "images/romesh.jpg",
-            "audio": "/songs/romesh.mp3",
-            "progress": 0
-        },
-        {
-            "id": 5,
-            "title": "Suthraya",
-            "artist": "SANA",
-            "duration": "3:50",
-            "cover": "images/suthraya.webp",
-            "audio": "/songs/suthraya.mp3",
+            "cover": "images/alawanthakama-cover-song-lk_view.webp",
+            "audio": "/songs/Alawanthakama - Sana [SONG.LK].mp3",
             "progress": 0
         }
     ],
     "playlists": [
         {
             "id": 1,
-            "title": "Greatest Hits",
+            "title": "Alawanthakama",
             "tracks": 12,
-            "cover": "images/placehalder.jpg"
+            "cover": "images/alawanthakama-cover-song-lk_view.webp",
+            "link": "https://www.youtube.com/@sanaligonigoda/playlists" 
         },
         {
             "id": 2,
-            "title": "Acoustic Sessions",
+            "title": "SANA | Official Music Videos",
             "tracks": 8,
-            "cover": "images/placehalder.jpg"
+            "cover": "images/prpfile.png",
+            "link": "https://www.youtube.com/@sanaligonigoda/playlists" 
+
         },
         {
             "id": 3,
-            "title": "Collaborations",
+            "title": "Sandak Wela",
             "tracks": 10,
-            "cover": "images/placehalder.jpg"
+            "cover": "images/Sandak-Wela-Sana-Cover-www.song.lk_view.webp",
+            "link": "https://www.youtube.com/@sanaligonigoda/playlists"
+        },
+        {
+            "id": 4,
+            "title": "Shot covers by | SANA",
+            "tracks": 10,
+            "cover": "images/mndakkaheene.webp",
+            "link": "https://www.youtube.com/@sanaligonigoda/playlists" 
+
         }
     ]
 }
